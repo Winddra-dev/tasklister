@@ -1,283 +1,331 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Wellister ✨</title>
-<link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@500;600;700&display=swap" rel="stylesheet">
-<script src="https://cdn.tailwindcss.com"></script>
-<style>
-:root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);
---bg:#f8f6fc;--card:#ffffff;--ink:#3d344d;--mute:#7c7093;--line:#eee5f8;--pink:#ffe4f1;--mint:#d4f7e7;--sky:#dbeaff;--lemon:#fff6d1;--lav:#eae1ff;--red:#ffe5e5;--accent:#9b7afe}
-:root[data-theme="dark"]{--bg:#14101a;--card:#1e1829;--ink:#eee6fb;--mute:#9e91b5;--line:#2e253e;--pink:#52283e;--mint:#1d3e31;--sky:#1f3654;--lemon:#4e411b;--lav:#332954;--red:#5a2323;--accent:#8e6eff}
-@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#14101a;--card:#1e1829;--ink:#eee6fb;--mute:#9e91b5;--line:#2e253e;--pink:#52283e;--mint:#1d3e31;--sky:#1f3654;--lemon:#4e411b;--lav:#332954;--red:#5a2323;--accent:#8e6eff}}
-html{scroll-padding-top:env(safe-area-inset-top,0px)}
-body{background:var(--bg);color:var(--ink);font-family:'Quicksand',system-ui,sans-serif;font-weight:600;min-height:100vh;transition:background .3s}
-.card{background:var(--card);border:2px solid var(--line);border-radius:24px;box-shadow:0 4px 20px rgba(74,63,92,0.03)}
-.inp{width:100%;background:var(--bg);border:2px solid var(--line);border-radius:16px;padding:.8rem 1rem;color:var(--ink);outline:none;font:inherit;min-height:48px;transition:border-color .2s}
-.inp:focus{border-color:var(--accent)}
-.btn{border-radius:9999px;padding:.6rem 1.2rem;font-weight:700;min-height:46px;transition:transform .1s, opacity .2s;cursor:pointer;display:inline-flex;align-items:center;justify-content:center}
-.btn:active{transform:scale(.96)}
-.chip{border-radius:9999px;padding:.45rem 1rem;background:var(--card);border:2px solid var(--line);font-size:.85rem;white-space:nowrap;min-height:40px;cursor:pointer;transition:all .2s}
-.chip.on{background:var(--accent);border-color:var(--accent);color:#fff;box-shadow:0 4px 12px rgba(155,122,254,0.3)}
-.tag{border-radius:9999px;padding:.2rem .75rem;font-size:.75rem;font-weight:700;color:var(--ink)}
-input[type=range]{accent-color:var(--accent)}
-input[type=checkbox]{width:24px;height:24px;accent-color:var(--accent);cursor:pointer;flex:none;border-radius:6px}
-.done .ttl{text-decoration:line-through;opacity:.5}
-@keyframes pop{from{transform:scale(.95);opacity:0}to{transform:scale(1);opacity:1}}
-.pop{animation:pop .25s cubic-bezier(0.16, 1, 0.3, 1)}
-details summary::-webkit-details-marker{display:none}
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pasti Beres! - Task Manager Anak Sekolahan</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Quicksand', sans-serif;
+            background-color: #FDFBF7;
+            color: #4A4A4A;
+        }
+        .pastel-yellow { background-color: #FEF3C7; }
+        .pastel-mint { background-color: #D1FAE5; }
+        .pastel-lavender { background-color: #EDE9FE; }
+        .pastel-pink { background-color: #FCE7F3; }
+        .pastel-blue { background-color: #E0F2FE; }
+    </style>
 </head>
-<body>
-<div class="max-w-xl mx-auto p-4 sm:p-6 pb-28">
+<body class="pb-28">
 
-<header class="flex items-center justify-between mb-6">
-  <div>
-    <h1 class="text-3xl font-bold tracking-tight">Wellister ✨</h1>
-    <p class="text-sm mt-1" style="color:var(--mute)" id="sub"></p>
-  </div>
-  <div class="flex gap-2">
-    <button class="btn card !p-0 w-12 h-12 flex items-center justify-center text-lg" id="bkp" title="Backup Data">💾</button>
-    <button class="btn card !p-0 w-12 h-12 flex items-center justify-center text-lg" id="thm" title="Mode Gelap/Terang">🌙</button>
-  </div>
-</header>
-
-<div id="alarm" class="mb-5"></div>
-<section id="stat" class="card p-5 mb-5"></section>
-
-<section class="card p-5 mb-5 space-y-4">
-  <h2 class="font-bold text-lg flex items-center gap-2"><span>➕</span> Tambah Tugas Baru</h2>
-  <div class="space-y-4">
-    <input id="fT" class="inp" placeholder="Judul tugas (misal: Makalah Sejarah)" maxlength="80">
-    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-      <input id="fM" class="inp" list="mapelList" placeholder="Mata Pelajaran / Kategori" maxlength="30">
-      <datalist id="mapelList"></datalist>
-      <input id="fD" type="date" class="inp">
-    </div>
-    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-      <div class="flex gap-2" id="fTipe"></div>
-      <select id="fB" class="inp">
-        <option>Presentasi</option>
-        <option>Makalah</option>
-        <option>Praktik</option>
-        <option>Nulis</option>
-        <option>Projek</option>
-      </select>
-    </div>
-    <div class="pt-2 border-t" style="border-color:var(--line)">
-      <div class="flex items-center justify-between mb-3"><span class="text-sm font-bold">Komponen Beban Kerja</span><span id="fTot" class="tag"></span></div>
-      <div id="fSub" class="space-y-3"></div>
-      <button class="btn chip mt-3 w-full sm:w-auto" id="addSub" type="button">+ Tambah Sub-tugas</button>
-    </div>
-    <button id="save" class="btn w-full text-white text-base shadow-lg" style="background:var(--accent);box-shadow:0 8px 20px rgba(155,122,254,0.3)">Simpan Tugas 🚀</button>
-  </div>
-</section>
-
-<section class="mb-4 space-y-3">
-  <input id="q" class="inp" placeholder="🔍 Cari judul, mapel, atau bentuk tugas...">
-  <div id="fil" class="flex gap-2 overflow-x-auto pb-2 scrollbar-none"></div>
-</section>
-
-<section id="list" class="space-y-4"></section>
-</div>
-
-<div id="modal" class="hidden fixed inset-0 z-50 flex items-end sm:items-center justify-center p-4 backdrop-blur-sm" style="background:rgba(0,0,0,0.5)">
-  <div class="card p-5 w-full max-w-md pop shadow-2xl">
-    <h3 class="font-bold text-lg mb-1">💾 Backup & Pemulihan Data</h3>
-    <p class="text-xs mb-3 leading-relaxed" style="color:var(--mute)">Salin teks di bawah untuk dicatat atau simpan file .json sebagai cadangan data tugasmu agar aman.</p>
-    <textarea id="bx" rows="6" class="inp text-xs font-mono p-3 leading-normal" style="resize:vertical"></textarea>
-    <div class="flex flex-wrap gap-2 mt-4">
-      <button id="bCopy" class="btn text-white text-sm" style="background:var(--accent)">Salin Teks</button>
-      <button id="bImp" class="btn text-sm" style="background:var(--mint);color:#14402e">Impor Teks</button>
-      <label class="btn chip flex items-center text-sm cursor-pointer">📂 Unggah File<input id="bFile" type="file" accept=".json,application/json" class="hidden"></label>
-      <button id="bClose" class="btn chip ml-auto text-sm">Tutup</button>
-    </div>
-    <p id="bMsg" class="text-xs mt-3 font-semibold" style="color:var(--mute)"></p>
-  </div>
-</div>
-
-<script>
-const $ = s => document.querySelector(s);
-const esc = s => String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-const uid = () => Date.now().toString(36) + Math.random().toString(36).slice(2, 6);
-const DAY = 864e5;
-const today0 = () => { const d = new Date(); d.setHours(0,0,0,0); return d; };
-const daysLeft = iso => Math.round((new Date(iso + 'T00:00:00') - today0()) / DAY);
-const WLABEL = ['', 'Ringan', 'Santai', 'Sedang', 'Berat', 'Ekstrem'];
-
-const KEY = 'wellister.tasks', TKEY = 'wellister.theme';
-const store = {
-  get(k, d) { try { const v = localStorage.getItem(k); return v ? JSON.parse(v) : d; } catch (e) { return d; } },
-  set(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) {} }
-};
-const mem = { tasks: store.get(KEY, []), filter: { q: '', mapel: '', tipe: '' }, tipe: 'Individu', subs: [{ n: '', w: 3 }] };
-const persist = () => store.set(KEY, mem.tasks);
-
-const beban = t => t.subs.reduce((a, s) => a + s.w, 0);
-const bebanInfo = n => n <= 5 ? ['Chill 😎', 'var(--mint)'] : n <= 10 ? ['Lumayan 😅', 'var(--lemon)'] : ['Keteteran 😵', 'var(--pink)'];
-function urgency(t) {
-  const d = daysLeft(t.deadline);
-  const score = beban(t) / Math.max(d, 0.5) + (d < 0 ? 50 + Math.abs(d) : 0);
-  return Math.round(score * 10) / 10;
-}
-const sorted = list => [...list].sort((a, b) => (a.done - b.done) || (a.done ? b.doneAt - a.doneAt : urgency(b) - urgency(a)));
-const weekStart = () => { const d = today0(); d.setDate(d.getDate() - ((d.getDay() + 6) % 7)); return d.getTime(); };
-const dlText = d => d < 0 ? `Telat ${-d} hari!` : d === 0 ? 'Hari ini!' : d === 1 ? 'Besok' : `${d} hari lagi`;
-
-function renderForm() {
-  $('#fTipe').innerHTML = ['Individu', 'Kelompok'].map(t =>
-    `<button type="button" class="chip flex-1 flex items-center justify-center gap-1.5 ${mem.tipe === t ? 'on' : ''}" data-tipe="${t}">${t === 'Individu' ? '🙋' : '👥'} ${t}</button>`).join('');
-  $('#fSub').innerHTML = mem.subs.map((s, i) => `
-    <div class="flex items-center gap-2 p-2 rounded-2xl" style="background:var(--bg);border:1px solid var(--line)" data-i="${i}">
-      <input class="inp sn !min-h-[40px] !py-1 !px-3 text-sm flex-1" placeholder="Nama sub-tugas (misal: Cari bahan)" value="${esc(s.n)}" maxlength="40">
-      <div class="w-28 flex-none text-center px-1">
-        <input type="range" min="1" max="5" value="${s.w}" class="sw w-full">
-        <div class="text-[10px] font-bold" style="color:var(--mute)">${s.w} · ${WLABEL[s.w]}</div>
-      </div>
-      ${mem.subs.length > 1 ? '<button type="button" class="sx text-lg w-8 h-8 flex items-center justify-center rounded-full hover:bg-red-100 dark:hover:bg-red-900/40 text-red-500 transition-colors">×</button>' : ''}
-    </div>`).join('');
-  updTot();
-}
-function updTot() {
-  const n = mem.subs.reduce((a, s) => a + s.w, 0), [l, c] = bebanInfo(n);
-  const el = $('#fTot'); el.textContent = `Total ${n} · ${l}`; el.style.background = c;
-}
-$('#fTipe').onclick = e => { const b = e.target.closest('[data-tipe]'); if (b) { mem.tipe = b.dataset.tipe; renderForm(); } };
-$('#addSub').onclick = () => { mem.subs.push({ n: '', w: 3 }); renderForm(); };
-$('#fSub').addEventListener('input', e => {
-  const i = +e.target.closest('[data-i]').dataset.i;
-  if (e.target.classList.contains('sn')) mem.subs[i].n = e.target.value;
-  if (e.target.classList.contains('sw')) { mem.subs[i].w = +e.target.value; e.target.nextElementSibling.textContent = `${e.target.value} · ${WLABEL[e.target.value]}`; updTot(); }
-});
-$('#fSub').addEventListener('click', e => {
-  if (e.target.classList.contains('sx')) { mem.subs.splice(+e.target.closest('[data-i]').dataset.i, 1); renderForm(); }
-});
-$('#save').onclick = () => {
-  const title = $('#fT').value.trim(), deadline = $('#fD').value;
-  if (!title) return flash('#fT');
-  if (!deadline) return flash('#fD');
-  mem.tasks.push({
-    id: uid(), title, mapel: $('#fM').value.trim() \vert{}\vert{} 'Umum', tipe: mem.tipe, bentuk: $('#fB').value, deadline,
-    subs: mem.subs.map((s, i) => ({ n: s.n.trim() || `Bagian ${i + 1}`, w: s.w, done: false })),
-    done: false, doneAt: 0, created: Date.now()
-  });
-  persist();
-  $('#fT').value = ''; $('#fM').value = ''; mem.subs = [{ n: '', w: 3 }]; renderForm(); render();
-};
-function flash(sel) { const el = $(sel); el.style.borderColor = '#ff7a7a'; el.focus(); setTimeout(() => el.style.borderColor = '', 1200); }
-
-function visible() {
-  const { q, mapel, tipe } = mem.filter, ql = q.toLowerCase();
-  return mem.tasks.filter(t => (!mapel || t.mapel === mapel) && (!tipe || t.tipe === tipe) &&
-    (!ql || (t.title + t.mapel + t.bentuk).toLowerCase().includes(ql)));
-}
-function taskHTML(t) {
-  const d = daysLeft(t.deadline), n = beban(t), [bl, bc] = bebanInfo(n);
-  const sd = t.subs.filter(s => s.done).length, pct = t.subs.length ? Math.round(sd / t.subs.length * 100) : 0;
-  const hot = !t.done && d <= 1;
-  return `<article class="card p-5 pop ${t.done ? 'done' : ''}" data-id="${t.id}" style="${hot ? 'border-color:#ff9a9a' : ''}">
-    <div class="flex items-start gap-3.5">
-      <input type="checkbox" class="tk mt-1.5" ${t.done ? 'checked' : ''}>
-      <div class="flex-1 min-w-0">
-        <h3 class="ttl font-bold text-lg leading-snug break-words">${esc(t.title)}</h3>
-        <div class="flex flex-wrap gap-2 mt-2.5">
-          <span class="tag" style="background:var(--lav)">📚 ${esc(t.mapel)}</span>
-          <span class="tag" style="background:var(--sky)">${t.tipe === 'Individu' ? '🙋' : '👥'} ${t.tipe}</span>
-          <span class="tag" style="background:var(--lemon)">🎯 ${esc(t.bentuk)}</span>
-          <span class="tag" style="background:${bc}">${bl} · ${n}</span>
+    <!-- Header & Alarm Realita (Teguran Mood) -->
+    <header class="pt-8 pb-6 px-6 bg-white shadow-sm rounded-b-[30px] mb-6">
+        <div class="max-w-md mx-auto">
+            <h1 class="text-2xl font-bold text-slate-700">✨ Catatan Santai Tapi Pasti</h1>
+            <p id="reality-alarm" class="text-xs text-rose-500 font-semibold mt-2 bg-rose-50 p-3 rounded-2xl border border-rose-100 hidden">
+                🔥 <!-- Teks teguran dinamis muncul di sini -->
+            </p>
+            <p id="quote-box" class="text-xs text-slate-400 mt-2 italic">"Pelan-pelan asal jalan, yang penting tugas kelar!"</p>
         </div>
-      </div>
-      <button class="del w-10 h-10 text-base flex-none flex items-center justify-center rounded-xl hover:bg-red-50 dark:hover:bg-red-900/30 text-red-500 transition-colors" title="Hapus Tugas">🗑️</button>
+    </header>
+
+    <!-- Konten Utama: List Tugas -->
+    <main class="max-w-md mx-auto px-4">
+        <div id="task-list" class="space-y-4">
+            <!-- Tugas dinamis dimuat di sini -->
+        </div>
+
+        <!-- State Kosong -->
+        <div id="empty-state" class="text-center py-16 hidden">
+            <div class="text-4xl mb-2">🎉</div>
+            <p class="text-slate-400 font-medium text-sm">Wah, tugasmu kosong! Santai dulu bro.</p>
+        </div>
+    </main>
+
+    <!-- Tombol Tambah Tugas Mengambang (FAB) -->
+    <div class="fixed bottom-6 left-0 right-0 flex justify-center z-20 px-4">
+        <button onclick="openModal()" class="w-full max-w-md bg-indigo-400 hover:bg-indigo-500 text-white font-bold py-3.5 rounded-full shadow-lg flex items-center justify-center gap-2 transition-transform active:scale-95 text-sm">
+            <span class="text-lg">+</span> Tambah Tugas Baru
+        </button>
     </div>
-    <div class="flex justify-between items-center mt-4 pt-3 border-t text-sm font-semibold" style="border-color:var(--line)">
-      <span style="color:${hot ? '#e04b4b' : 'var(--mute)'}">⏰ ${dlText(d)} <span class="font-normal opacity-80">(${t.deadline})</span></span>
-      ${t.done ? '<span class="text-emerald-600 dark:text-emerald-400 font-bold">✅ Beres!</span>' : `<span style="color:var(--mute)">🔥 Skor: ${urgency(t)}</span>`}
+
+    <!-- Modal Input Tugas -->
+    <div id="task-modal" class="fixed inset-0 bg-black/40 backdrop-blur-sm z-50 hidden flex items-end sm:items-center justify-center p-0 sm:p-4">
+        <div class="bg-white w-full max-w-md rounded-t-[30px] sm:rounded-[30px] p-6 max-h-[90vh] overflow-y-auto shadow-2xl">
+            <div class="flex justify-between items-center mb-4">
+                <h2 class="text-base font-bold text-slate-700">📝 Bikin Tugas Baru</h2>
+                <button onclick="closeModal()" class="text-slate-400 hover:text-slate-600 font-bold text-lg">✕</button>
+            </div>
+
+            <form id="task-form" onsubmit="saveTask(event)" class="space-y-4 text-xs">
+                <div>
+                    <label class="block font-bold text-slate-500 uppercase tracking-wider mb-1">Mata Pelajaran (Mapel)</label>
+                    <input type="text" id="task-mapel" required class="w-full bg-slate-50 border border-slate-200 rounded-2xl px-4 py-2.5 text-xs focus:outline-none focus:border-indigo-400" placeholder="Contoh: Matematika, Sejarah, PPLG">
+                </div>
+
+                <div>
+                    <label class="block font-bold text-slate-500 uppercase tracking-wider mb-1">Judul Tugas</label>
+                    <input type="text" id="task-title" required class="w-full bg-slate-50 border border-slate-200 rounded-2xl px-4 py-2.5 text-xs focus:outline-none focus:border-indigo-400" placeholder="Contoh: Bikin Laporan Praktikum">
+                </div>
+
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label class="block font-bold text-slate-500 uppercase tracking-wider mb-1">Tipe Pengerjaan</label>
+                        <select id="task-type" class="w-full bg-slate-50 border border-slate-200 rounded-2xl px-3 py-2.5 text-xs focus:outline-none focus:border-indigo-400">
+                            <option value="Individu">👤 Individu</option>
+                            <option value="Kelompok">👥 Kelompok (Rawan Macet)</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block font-bold text-slate-500 uppercase tracking-wider mb-1">Bentuk Tugas</label>
+                        <select id="task-category" class="w-full bg-slate-50 border border-slate-200 rounded-2xl px-3 py-2.5 text-xs focus:outline-none focus:border-indigo-400">
+                            <option value="Presentasi/PPT">📊 Presentasi / PPT</option>
+                            <option value="Makalah/Laporan">📑 Makalah / Laporan</option>
+                            <option value="Praktik/Produk">🛠️ Praktik / Produk</option>
+                            <option value="Nulis/Catatan">✍️ Nulis / Catatan</option>
+                            <option value="Lainnya">📌 Lainnya</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block font-bold text-slate-500 uppercase tracking-wider mb-1">Tenggat Waktu (Deadline)</label>
+                    <input type="date" id="task-deadline" required class="w-full bg-slate-50 border border-slate-200 rounded-2xl px-4 py-2.5 text-xs focus:outline-none focus:border-indigo-400">
+                </div>
+
+                <!-- Bagian Komponen Beban Kerja -->
+                <div>
+                    <div class="flex justify-between items-center mb-1">
+                        <label class="font-bold text-slate-500 uppercase tracking-wider">Komponen Beban Kerja</label>
+                        <button type="button" onclick="addWorkloadItem()" class="text-indigo-500 font-bold hover:underline">+ Tambah Bagian</button>
+                    </div>
+                    <div id="workload-container" class="space-y-2">
+                        <div class="flex gap-2 items-center workload-row">
+                            <input type="text" placeholder="Misal: Cari referensi" required class="flex-1 bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs focus:outline-none focus:border-indigo-400 w-name">
+                            <select class="bg-slate-50 border border-slate-200 rounded-xl px-2 py-2 text-xs focus:outline-none focus:border-indigo-400 w-score">
+                                <option value="1">1 (Ringan)</option>
+                                <option value="2">2 (Sedang)</option>
+                                <option value="3" selected>3 (Normal)</option>
+                                <option value="4">4 (Berat)</option>
+                                <option value="5">5 (Ekstrem)</option>
+                            </select>
+                            <button type="button" onclick="removeWorkloadItem(this)" class="text-slate-300 hover:text-red-400 px-1">✕</button>
+                        </div>
+                    </div>
+                </div>
+
+                <button type="submit" class="w-full bg-indigo-400 hover:bg-indigo-500 text-white font-bold py-3 rounded-2xl shadow-md transition-transform active:scale-95 mt-4">Simpan Tugas</button>
+            </form>
+        </div>
     </div>
-    <details class="mt-3 pt-2 group"><summary class="text-sm cursor-pointer font-bold flex items-center justify-between" style="color:var(--mute)"><span>Sub-tugas (${sd}/${t.subs.length} selesai)</span> <span class="text-xs font-normal">▼ Lihat detail</span></summary>
-      <div class="h-2.5 rounded-full mt-2.5 overflow-hidden" style="background:var(--line)"><div class="h-full rounded-full transition-all duration-300" style="width:${pct}%;background:var(--accent)"></div></div>
-      <ul class="mt-3 space-y-2">${t.subs.map((s, i) => `<li class="flex items-center gap-2.5 p-2 rounded-xl transition-colors ${s.done ? 'done opacity-60' : ''}" style="background:var(--bg)"><input type="checkbox" class="sk" data-s="${i}" ${s.done ? 'checked' : ''}><span class="ttl text-sm flex-1">${esc(s.n)}</span><span class="text-xs px-2 py-0.5 rounded-full font-bold" style="background:var(--line);color:var(--mute)">${WLABEL[s.w]}</span></li>`).join('')}</ul>
-    </details>
-  </article>`;
-}
-$('#list').addEventListener('click', e => {
-  const el = e.target.closest('[data-id]'); if (!el) return;
-  const t = mem.tasks.find(x => x.id === el.dataset.id); if (!t) return;
-  if (e.target.classList.contains('del')) { if (confirm('Hapus tugas ini?')) mem.tasks = mem.tasks.filter(x => x !== t); }
-  else if (e.target.classList.contains('tk')) { t.done = e.target.checked; t.doneAt = t.done ? Date.now() : 0; if (t.done) t.subs.forEach(s => s.done = true); }
-  else if (e.target.classList.contains('sk')) {
-    t.subs[+e.target.dataset.s].done = e.target.checked;
-    if (t.subs.every(s => s.done) && !t.done) { t.done = true; t.doneAt = Date.now(); }
-  } else return;
-  persist(); render();
-});
 
-function renderFilter() {
-  const mapels = [...new Set(mem.tasks.map(t => t.mapel))].sort(), f = mem.filter;
-  $('#mapelList').innerHTML = mapels.map(m => `<option value="${esc(m)}">`).join('');
-  const chip = (k, v, label) => `<button class="chip ${f[k] === v ? 'on' : ''}" data-k="${k}" data-v="${esc(v)}">${label}</button>`;
-  $('#fil').innerHTML = chip('tipe', '', 'Semua Tipe') + chip('tipe', 'Individu', '🙋 Individu') + chip('tipe', 'Kelompok', '👥 Kelompok') +
-    '<span class="self-center mx-1" style="color:var(--line)">|</span>' + chip('mapel', '', 'Semua Mapel') + mapels.map(m => chip('mapel', m, esc(m))).join('');
-}
-$('#fil').onclick = e => { const b = e.target.closest('[data-k]'); if (b) { mem.filter[b.dataset.k] = b.dataset.v; render(); } };
-$('#q').oninput = e => { mem.filter.q = e.target.value; renderList(); };
+    <!-- Script Logika & Data -->
+    <script>
+        let tasks = JSON.parse(localStorage.getItem('playful_tasks_v2')) || [];
 
-function renderStat() {
-  const ws = weekStart(), doneWeek = mem.tasks.filter(t => t.done && t.doneAt >= ws).length;
-  const pending = mem.tasks.filter(t => !t.done).length, total = doneWeek + pending, pct = total ? Math.round(doneWeek / total * 100) : 0;
-  const badge = doneWeek >= 10 ? '👑 Legenda Tugas' : doneWeek >= 5 ? '🏆 Jagoan Deadline' : doneWeek >= 3 ? '⭐ Rajin Banget' : doneWeek >= 1 ? '🌱 Mulai Gaspol' : '😴 Ayo Mulai!';
-  $('#stat').innerHTML = `<div class="flex flex-col sm:flex-row justify-between sm:items-center gap-3"><div><div class="text-xs uppercase tracking-wider font-bold" style="color:var(--mute)">Progress Minggu Ini</div><div class="text-2xl font-bold mt-0.5">${doneWeek} Tuntas <span class="text-sm font-semibold" style="color:var(--mute)">· ${pending} tersisa</span></div></div><span class="tag self-start sm:self-auto text-sm px-3 py-1.5" style="background:var(--lemon)">${badge}</span></div>
-    <div class="h-3.5 rounded-full mt-4 overflow-hidden" style="background:var(--line)"><div class="h-full rounded-full transition-all duration-500" style="width:${pct}%;background:linear-gradient(90deg,var(--accent),#ff9ccf)"></div></div>`;
-  $('#sub').textContent = pending ? `${pending} tugas menunggu perhatianmu` : 'Semua tugas beres, mantap! 🎉';
-}
-function renderAlarm() {
-  const hot = mem.tasks.filter(t => !t.done && daysLeft(t.deadline) <= 1);
-  if (!hot.length) { $('#alarm').innerHTML = ''; return; }
-  const late = hot.filter(t => daysLeft(t.deadline) < 0).length;
-  $('#alarm').innerHTML = `<div class="card p-4 pop flex items-start gap-3" style="background:var(--red);border-color:#ff9a9a"><span class="text-2xl">🚨</span><div class="flex-1"><div class="font-bold">Alarm Realita!</div><div class="text-sm mt-0.5 leading-snug">${hot.length} tugas sudah mepet deadline${late ? ` (${late} sudah telat)` : ''}. Fokus kerjain "${esc(sorted(hot)[0].title)}" dulu yuk, pasti beres kalau dicicil dari sekarang! 💪</div></div></div>`;
-}
+        // Quotes santai
+        const quotes = [
+            "\"Pelan-pelan asal jalan, yang penting tugas kelar!\"",
+            "\"Dikerjain sekarang = santai nanti malam. Deal?\"",
+            "\"Tarik napas, cicil dikit-dikit pasti beres kok.\"",
+            "\"Jangan biarkan tugas numpuk kayak cucian piring!\""
+        ];
+        document.getElementById('quote-box').innerText = quotes[Math.floor(Math.random() * quotes.length)];
 
-function renderList() {
-  const v = sorted(visible());
-  $('#list').innerHTML = v.length ? v.map(taskHTML).join('') :
-    `<div class="card p-10 text-center" style="color:var(--mute)"><div class="text-3xl mb-2">🔍</div>Tidak ada tugas yang cocok dengan pencarianmu.</div>`;
-}
-function render() { renderAlarm(); renderStat(); renderFilter(); renderList(); }
+        // Set minimal date input ke hari ini
+        document.getElementById('task-deadline').min = new Date().toISOString().split("T")[0];
 
-function setTheme(t, save) {
-  document.documentElement.dataset.theme = t; $('#thm').textContent = t === 'dark' ? '☀️' : '🌙';
-  if (save) store.set(TKEY, t);
-}
-$('#thm').onclick = () => setTheme(document.documentElement.dataset.theme === 'dark' ? 'light' : 'dark', true);
-setTheme(store.get(TKEY, matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'), false);
+        function openModal() {
+            document.getElementById('task-modal').classList.remove('hidden');
+        }
 
-const bmsg = (t, ok) => { $('#bMsg').textContent = t; $('#bMsg').style.color = ok ? '#2f9e6d' : '#e04b4b'; };
-$('#bkp').onclick = () => { $('#bx').value = JSON.stringify({ app: 'wellister', v: 2, tasks: mem.tasks }); bmsg('', true); $('#modal').classList.remove('hidden'); };
-$('#bClose').onclick = () => $('#modal').classList.add('hidden');
-$('#bCopy').onclick = async () => {
-  try { await navigator.clipboard.writeText($('#bx').value); bmsg('Berhasil disalin ke clipboard! ✅', true); }
-  catch (e) { $('#bx').select(); bmsg('Blok teks lalu salin secara manual.', false); }
-};
-function importText(txt) {
-  try {
-    const d = JSON.parse(txt), arr = Array.isArray(d) ? d : d.tasks;
-    if (!Array.isArray(arr)) throw 0;
-    const clean = arr.filter(t => t && t.title && /^\d{4}-\d{2}-\d{2}$/.test(t.deadline) && Array.isArray(t.subs)).map(t => ({
-      id: String(t.id || uid()), title: String(t.title), mapel: String(t.mapel || 'Umum'),
-      tipe: t.tipe === 'Kelompok' ? 'Kelompok' : 'Individu', bentuk: String(t.bentuk || 'Nulis'), deadline: t.deadline,
-      subs: t.subs.map(s => ({ n: String(s.n || 'Bagian'), w: Math.min(5, Math.max(1, +s.w || 3)), done: !!s.done })),
-      done: !!t.done, doneAt: +t.doneAt || 0, created: +t.created || Date.now()
-    }));
-    const ids = new Set(mem.tasks.map(t => t.id)), added = clean.filter(t => !ids.has(t.id));
-    mem.tasks.push(...added); persist(); render();
-    bmsg(`Berhasil impor ${added.length} tugas baru ✅`, true);
-  } catch (e) { bmsg('Format data tidak valid, periksa kembali teksnya.', false); }
-}
-$('#bImp').onclick = () => importText($('#bx').value);
-$('#bFile').onchange = e => { const f = e.target.files[0]; if (!f) return; const r = new FileReader(); r.onload = () => importText(r.result); r.readAsText(f); e.target.value = ''; };
+        function closeModal() {
+            document.getElementById('task-modal').classList.add('hidden');
+            document.getElementById('task-form').reset();
+            document.getElementById('workload-container').innerHTML = `
+                <div class="flex gap-2 items-center workload-row">
+                    <input type="text" placeholder="Misal: Cari referensi" required class="flex-1 bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs focus:outline-none focus:border-indigo-400 w-name">
+                    <select class="bg-slate-50 border border-slate-200 rounded-xl px-2 py-2 text-xs focus:outline-none focus:border-indigo-400 w-score">
+                        <option value="1">1 (Ringan)</option><option value="2">2 (Sedang)</option><option value="3" selected>3 (Normal)</option><option value="4">4 (Berat)</option><option value="5">5 (Ekstrem)</option>
+                    </select>
+                    <button type="button" onclick="removeWorkloadItem(this)" class="text-slate-300 hover:text-red-400 px-1">✕</button>
+                </div>
+            `;
+        }
 
-$('#fD').value = new Date(Date.now() + 3 * DAY - new Date().getTimezoneOffset() * 6e4).toISOString().slice(0, 10);
-renderForm(); render();
-</script>
+        function addWorkloadItem() {
+            const container = document.getElementById('workload-container');
+            const row = document.createElement('div');
+            row.className = "flex gap-2 items-center workload-row";
+            row.innerHTML = `
+                <input type="text" placeholder="Bagian tugas..." required class="flex-1 bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs focus:outline-none focus:border-indigo-400 w-name">
+                <select class="bg-slate-50 border border-slate-200 rounded-xl px-2 py-2 text-xs focus:outline-none focus:border-indigo-400 w-score">
+                    <option value="1">1 (Ringan)</option><option value="2">2 (Sedang)</option><option value="3" selected>3 (Normal)</option><option value="4">4 (Berat)</option><option value="5">5 (Ekstrem)</option>
+                </select>
+                <button type="button" onclick="removeWorkloadItem(this)" class="text-slate-300 hover:text-red-400 px-1">✕</button>
+            `;
+            container.appendChild(row);
+        }
+
+        function removeWorkloadItem(btn) {
+            const rows = document.querySelectorAll('.workload-row');
+            if(rows.length > 1) {
+                btn.parentElement.remove();
+            }
+        }
+
+        function saveTask(e) {
+            e.preventDefault();
+            const mapel = document.getElementById('task-mapel').value;
+            const title = document.getElementById('task-title').value;
+            const type = document.getElementById('task-type').value;
+            const category = document.getElementById('task-category').value;
+            const deadline = document.getElementById('task-deadline').value;
+
+            const rows = document.querySelectorAll('.workload-row');
+            let totalLoad = 0;
+            let items = [];
+
+            rows.forEach(row => {
+                const name = row.querySelector('.w-name').value;
+                const score = parseInt(row.querySelector('.w-score').value);
+                totalLoad += score;
+                items.push({ name, score });
+            });
+
+            const newTask = {
+                id: Date.now(),
+                mapel,
+                title,
+                type,
+                category,
+                deadline,
+                totalLoad,
+                items,
+                completed: false
+            };
+
+            tasks.push(newTask);
+            localStorage.setItem('playful_tasks_v2', JSON.stringify(tasks));
+            closeModal();
+            renderTasks();
+        }
+
+        function toggleTask(id) {
+            tasks = tasks.map(t => t.id === id ? {...t, completed: !t.completed} : t);
+            localStorage.setItem('playful_tasks_v2', JSON.stringify(tasks));
+            renderTasks();
+        }
+
+        function deleteTask(id) {
+            tasks = tasks.filter(t => t.id !== id);
+            localStorage.setItem('playful_tasks_v2', JSON.stringify(tasks));
+            renderTasks();
+        }
+
+        function renderTasks() {
+            const listEl = document.getElementById('task-list');
+            const emptyEl = document.getElementById('empty-state');
+            const alarmEl = document.getElementById('reality-alarm');
+            listEl.innerHTML = '';
+
+            if (tasks.length === 0) {
+                emptyEl.classList.remove('hidden');
+                alarmEl.classList.add('hidden');
+                return;
+            } else {
+                emptyEl.classList.add('hidden');
+            }
+
+            const today = new Date();
+            today.setHours(0,0,0,0);
+
+            // Cek apakah ada tugas yang mepet deadline tapi belum kelar buat Alarm Realita
+            let urgentCount = 0;
+            tasks.forEach(t => {
+                if(!t.completed) {
+                    const diff = Math.ceil((new Date(t.deadline) - today) / (1000 * 60 * 60 * 24));
+                    if(diff <= 1) urgentCount++;
+                }
+            });
+
+            if(urgentCount > 0) {
+                alarmEl.classList.remove('hidden');
+                alarmEl.innerText = `🚨 Eh, ada ${urgentCount} tugas yang tenggatnya udah mepet banget! Masih mau males-malesan atau dicicil sekarang nih?`;
+            } else {
+                alarmEl.classList.add('hidden');
+            }
+
+            // Algoritma Pengurutan Kegentingan (Urgency Score)
+            const sortedTasks = [...tasks].sort((a, b) => {
+                if (a.completed !== b.completed) return a.completed ? 1 : -1;
+
+                const dateA = new Date(a.deadline);
+                const dateB = new Date(b.deadline);
+                const diffDaysA = Math.max(1, Math.ceil((dateA - today) / (1000 * 60 * 60 * 24)));
+                const diffDaysB = Math.max(1, Math.ceil((dateB - today) / (1000 * 60 * 60 * 24)));
+
+                const scoreA = a.totalLoad / diffDaysA;
+                const scoreB = b.totalLoad / diffDaysB;
+
+                return scoreB - scoreA;
+            });
+
+            sortedTasks.forEach(task => {
+                // Label Visual Berdasarkan Total Beban & Kondisi
+                let badgeClass = "pastel-yellow text-amber-700";
+                let badgeText = "Chill 🌿";
+                if(task.totalLoad >= 6 && task.totalLoad <= 10) {
+                    badgeClass = "pastel-mint text-emerald-700";
+                    badgeText = "Lumayan 🏃‍♂️";
+                } else if(task.totalLoad > 10) {
+                    badgeClass = "pastel-pink text-rose-700";
+                    badgeText = "Keteteran 🔥";
+                }
+
+                const card = document.createElement('div');
+                card.className = `bg-white border border-slate-100 rounded-[24px] p-5 shadow-sm transition-all text-xs ${task.completed ? 'opacity-50 bg-slate-50' : ''}`;
+                
+                card.innerHTML = `
+                    <!-- Tag Mapel & Tipe -->
+                    <div class="flex items-center justify-between mb-2">
+                        <span class="bg-indigo-50 text-indigo-600 font-bold px-2.5 py-1 rounded-lg">${task.mapel}</span>
+                        <div class="flex gap-1.5">
+                            <span class="bg-slate-100 text-slate-500 px-2 py-0.5 rounded-md">${task.type === 'Kelompok' ? '👥 Kelompok' : '👤 Individu'}</span>
+                            <span class="bg-slate-100 text-slate-500 px-2 py-0.5 rounded-md">${task.category}</span>
+                        </div>
+                    </div>
+
+                    <div class="flex items-start justify-between gap-3 mt-3">
+                        <div class="flex items-start gap-3 flex-1">
+                            <input type="checkbox" ${task.completed ? 'checked' : ''} onclick="toggleTask(${task.id})" class="mt-1 w-5 h-5 accent-indigo-400 rounded-lg cursor-pointer">
+                            <div>
+                                <h3 class="font-bold text-slate-700 text-sm sm:text-base ${task.completed ? 'line-through text-slate-400' : ''}">${task.title}</h3>
+                                <p class="text-slate-400 mt-0.5">📅 Deadline: ${task.deadline}</p>
+                            </div>
+                        </div>
+                        <span class="font-bold px-2.5 py-1 rounded-full text-[10px] ${badgeClass}">${badgeText} (${task.totalLoad})</span>
+                    </div>
+
+                    <!-- Sub-beban rincian -->
+                    <div class="mt-3 pl-8 space-y-1 border-t border-slate-50 pt-2">
+                        ${task.items.map(i => `<div class="text-slate-500 flex justify-between"><span>• ${i.name}</span><span class="text-slate-400">skor: ${i.score}</span></div>`).join('')}
+                    </div>
+
+                    <div class="mt-4 pt-3 border-t border-slate-50 flex justify-between items-center text-[11px]">
+                        <span class="text-slate-300">ID: ${task.id}</span>
+                        <button onclick="deleteTask(${task.id})" class="text-rose-400 hover:text-rose-600 font-medium">Hapus</button>
+                    </div>
+                `;
+                listEl.appendChild(card);
+            });
+        }
+
+        renderTasks();
+    </script>
 </body>
 </html>
